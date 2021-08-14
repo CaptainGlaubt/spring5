@@ -1,5 +1,6 @@
 package se.lernholt.tacos;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -9,6 +10,8 @@ import lombok.Data;
 
 @Data
 public class Taco {
+    private Long id;
+    private Date createdAt;
     @NotNull
     @Size(min = 5, message = "Name must be atleast 5 characters long.")
     private String name;

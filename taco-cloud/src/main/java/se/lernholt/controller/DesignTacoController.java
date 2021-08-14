@@ -3,6 +3,7 @@ package se.lernholt.controller;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import se.lernholt.repository.IngredientRepository;
 import se.lernholt.tacos.Ingredient;
 import se.lernholt.tacos.Ingredient.Type;
 import se.lernholt.tacos.Taco;
@@ -21,6 +24,7 @@ import se.lernholt.tacos.Taco;
 @Slf4j
 @Controller
 @RequestMapping("/design")
+@RequiredArgsConstructor
 public class DesignTacoController {
 
     private static final List<Ingredient> INGREDIENTS = Arrays.asList(
@@ -30,10 +34,19 @@ public class DesignTacoController {
             new Ingredient("CHED", "Cheddar", Type.CHEESE), new Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
             new Ingredient("SLSA", "Salsa", Type.SAUCE), new Ingredient("SRCR", "Sour Cream", Type.SAUCE));
 
+    private final IngredientRepository ingredientRepository;
+
     @GetMapping
     public String showDesignForm(Model model) {
-        appendIngredientsToModel(model);
-        model.addAttribute("design", new Taco());
+        Iterable<Ingredient> ingredients = ingredientRepository.findAll();
+        for (Type type : Ingredient.Type.values()) {
+            String typeNameLower = type.name().toLowerCase();
+            List<Ingredient> typeIngredients = StreamSupport.stream(ingredients.spliterator(), false)
+                    .filter(ingredient -> ingredient.getType().equals(type))
+                    .collect(Collectors.toList());
+            model.addAttribute(typeNameLower, typeIngredients);
+            model.addAttribute("design", new Taco());
+        }
         return "design";
     }
 
