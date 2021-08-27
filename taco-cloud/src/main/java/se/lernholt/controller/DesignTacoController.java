@@ -11,19 +11,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import se.lernholt.repository.IngredientRepository;
+import se.lernholt.repository.TacoRepository;
 import se.lernholt.tacos.Ingredient;
 import se.lernholt.tacos.Ingredient.Type;
+import se.lernholt.tacos.Order;
 import se.lernholt.tacos.Taco;
 
-@Slf4j
 @Controller
 @RequestMapping("/design")
+@SessionAttributes("order")
 @RequiredArgsConstructor
 public class DesignTacoController {
 
@@ -34,6 +37,7 @@ public class DesignTacoController {
             new Ingredient("CHED", "Cheddar", Type.CHEESE), new Ingredient("JACK", "Monterrey Jack", Type.CHEESE),
             new Ingredient("SLSA", "Salsa", Type.SAUCE), new Ingredient("SRCR", "Sour Cream", Type.SAUCE));
 
+    private final TacoRepository tacoRepository;
     private final IngredientRepository ingredientRepository;
 
     @GetMapping
@@ -51,13 +55,14 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(Model model, @Valid Taco design, Errors errors) {
+    public String processDesign(Model model, @Valid Taco design, Errors errors, @ModelAttribute Order order) {
         if (errors.hasErrors()) {
             appendIngredientsToModel(model);
             model.addAttribute("design", design);
             return "design";
         }
-        log.info("Processing design: {}", design);
+        Taco saved = tacoRepository.save(design);
+        order.addDesign(saved);
         return "redirect:/orders/current";
     }
 

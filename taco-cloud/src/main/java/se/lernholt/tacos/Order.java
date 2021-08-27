@@ -1,6 +1,9 @@
 package se.lernholt.tacos;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -30,4 +33,12 @@ public class Order {
     private String ccExpiration;
     @Digits(integer = 3, fraction = 0, message = "Invalid CCV")
     private String ccCVV;
+    private List<Taco> tacos;
+
+    public void addDesign(Taco taco) {
+        if (Objects.isNull(tacos)) {
+            tacos = new ArrayList<>();
+        }
+        tacos.add(taco);
+    }
 }
