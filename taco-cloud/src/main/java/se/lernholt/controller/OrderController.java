@@ -3,7 +3,6 @@ package se.lernholt.controller;
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,8 +23,7 @@ public class OrderController {
     private final OrderRepository orderRepository;
 
     @GetMapping("/current")
-    public String orderForm(Model model) {
-        model.addAttribute("order", new Order());
+    public String orderForm() {
         return "orderForm";
     }
 

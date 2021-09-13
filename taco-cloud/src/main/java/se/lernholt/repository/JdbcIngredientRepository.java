@@ -14,16 +14,17 @@ import se.lernholt.tacos.Ingredient.Type;
 @RequiredArgsConstructor
 public class JdbcIngredientRepository implements IngredientRepository {
 
-    private final JdbcTemplate jdbc;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public Iterable<Ingredient> findAll() {
-        return jdbc.query("select id, name, type from Ingredient", JdbcIngredientRepository::mapRowToIngredient);
+        return jdbcTemplate.query("select id, name, type from Ingredient",
+                JdbcIngredientRepository::mapRowToIngredient);
     }
 
     @Override
     public Ingredient findOne(String id) {
-        return jdbc.queryForObject("select id, name, type from Ingredient where id=?",
+        return jdbcTemplate.queryForObject("select id, name, type from Ingredient where id=?",
                 JdbcIngredientRepository::mapRowToIngredient, id);
     }
 
@@ -32,7 +33,7 @@ public class JdbcIngredientRepository implements IngredientRepository {
         String id = ingredient.getId();
         String name = ingredient.getName();
         String type = ingredient.getType().toString();
-        jdbc.update("insert into Ingredient (id, name, type) values (?, ?, ?)", id, name, type);
+        jdbcTemplate.update("insert into Ingredient (id, name, type) values (?, ?, ?)", id, name, type);
         return ingredient;
     }
 

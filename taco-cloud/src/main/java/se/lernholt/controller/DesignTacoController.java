@@ -55,15 +55,25 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processDesign(Model model, @Valid Taco design, Errors errors, @ModelAttribute Order order) {
+    public String processDesign(Model model, @ModelAttribute("design") @Valid Taco design, Errors errors,
+            @ModelAttribute("order") Order order) {
         if (errors.hasErrors()) {
             appendIngredientsToModel(model);
-            model.addAttribute("design", design);
             return "design";
         }
         Taco saved = tacoRepository.save(design);
         order.addDesign(saved);
         return "redirect:/orders/current";
+    }
+
+    @ModelAttribute("order")
+    public Order getOrder() {
+        return new Order();
+    }
+
+    @ModelAttribute("taco")
+    public Taco getTaco() {
+        return new Taco();
     }
 
     private static void appendIngredientsToModel(Model model) {
