@@ -1,4 +1,4 @@
-package se.lernholt.repository;
+package se.lernholt.repository.jdbc;
 
 import java.sql.Timestamp;
 import java.sql.Types;

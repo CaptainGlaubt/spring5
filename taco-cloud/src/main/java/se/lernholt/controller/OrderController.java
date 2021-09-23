@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import lombok.RequiredArgsConstructor;
-import se.lernholt.repository.OrderRepository;
+import se.lernholt.repository.jpa.OrderRepository;
 import se.lernholt.tacos.Order;
 
 @Controller

@@ -1,4 +1,4 @@
-package se.lernholt.repository;
+package se.lernholt.repository.jdbc;
 
 import se.lernholt.tacos.Ingredient;
 

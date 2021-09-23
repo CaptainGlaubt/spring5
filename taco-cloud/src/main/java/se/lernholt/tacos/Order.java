@@ -1,10 +1,18 @@
 package se.lernholt.tacos;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -14,7 +22,12 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 import lombok.Data;
 
 @Data
-public class Order {
+@Entity
+@Table(name = "Taco_Order")
+@SuppressWarnings("serial")
+public class Order implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Date placedAt;
     @NotBlank(message = "Name is required.")
@@ -33,6 +46,7 @@ public class Order {
     private String ccExpiration;
     @Digits(integer = 3, fraction = 0, message = "Invalid CCV")
     private String ccCVV;
+    @ManyToMany(targetEntity = Taco.class)
     private List<Taco> tacos;
 
     public void addDesign(Taco taco) {
@@ -40,5 +54,10 @@ public class Order {
             tacos = new ArrayList<>();
         }
         tacos.add(taco);
+    }
+
+    @PrePersist
+    public void placedAt() {
+        placedAt = new Date();
     }
 }

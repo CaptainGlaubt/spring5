@@ -1,4 +1,4 @@
-package se.lernholt.repository;
+package se.lernholt.repository.jdbc;
 
 import java.util.Date;
 import java.util.HashMap;

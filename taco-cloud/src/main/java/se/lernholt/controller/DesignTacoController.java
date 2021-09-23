@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import lombok.RequiredArgsConstructor;
-import se.lernholt.repository.IngredientRepository;
-import se.lernholt.repository.TacoRepository;
+import se.lernholt.repository.jpa.IngredientRepository;
+import se.lernholt.repository.jpa.TacoRepository;
 import se.lernholt.tacos.Ingredient;
 import se.lernholt.tacos.Ingredient.Type;
 import se.lernholt.tacos.Order;

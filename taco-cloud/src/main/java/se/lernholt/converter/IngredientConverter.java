@@ -4,7 +4,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import se.lernholt.repository.IngredientRepository;
+import se.lernholt.repository.jdbc.IngredientRepository;
 import se.lernholt.tacos.Ingredient;
 
 @Component
