@@ -10,7 +10,7 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>se.lernholt</groupId>
-    <artifactId>taco-cloud</artifactId>
+    <artifactId>taco-cloud-foundational</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>taco-cloud</name>
     <description>Example web application based on Spring 5</description>
