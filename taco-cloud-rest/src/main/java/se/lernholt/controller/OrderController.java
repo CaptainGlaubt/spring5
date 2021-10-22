@@ -1,56 +1,70 @@
 package se.lernholt.controller;
 
-import javax.validation.Valid;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import se.lernholt.config.TacoCloudOrderConfig;
 import se.lernholt.repository.jpa.OrderRepository;
 import se.lernholt.tacos.Order;
-import se.lernholt.tacos.User;
 
-@Controller
-@RequestMapping("/orders")
-@SessionAttributes("order")
+@RestController
+@RequestMapping(path = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class OrderController {
 
-    private final TacoCloudOrderConfig orderConfig;
     private final OrderRepository orderRepository;
 
-    @GetMapping("/current")
-    public String orderForm() {
-        return "orderForm";
+    @PutMapping("/{id}")
+    public Order putOrder(@RequestBody Order order) {
+        return orderRepository.save(order);
     }
 
-    @GetMapping
-    public String ordersForUser(@AuthenticationPrincipal User user, Model model) {
-        int pageSize = orderConfig.getPageSize();
-        Pageable pageable = PageRequest.of(0, pageSize);
-        model.addAttribute("orders", orderRepository.findByUserOrderByPlacedAtDesc(user, pageable));
-        return "orderList";
-    }
-
-    @PostMapping
-    public String processOrder(@Valid Order order, Errors errors, SessionStatus sessionStatus,
-            @AuthenticationPrincipal User user) {
-        if (errors.hasErrors()) {
-            return "orderForm";
+    @PatchMapping(path = "/{id}", consumes = "application/json")
+    public ResponseEntity<Order> patchOrder(@PathVariable("id") Long id, @RequestBody Order patchOrder) {
+        Optional<Order> storedOrderOpt = orderRepository.findById(id);
+        if (storedOrderOpt.isPresent()) {
+            Order storedOrder = storedOrderOpt.get();
+            patchIfNotNull(patchOrder::getDeliveryName, storedOrder::setDeliveryName);
+            patchIfNotNull(patchOrder::getDeliveryStreet, storedOrder::setDeliveryStreet);
+            patchIfNotNull(patchOrder::getDeliveryCity, storedOrder::setDeliveryCity);
+            patchIfNotNull(patchOrder::getDeliveryState, storedOrder::setDeliveryState);
+            patchIfNotNull(patchOrder::getDeliveryZip, storedOrder::setDeliveryZip);
+            patchIfNotNull(patchOrder::getCcNumber, storedOrder::setCcNumber);
+            patchIfNotNull(patchOrder::getCcExpiration, storedOrder::setCcExpiration);
+            patchIfNotNull(patchOrder::getCcCVV, storedOrder::setCcCVV);
+            orderRepository.save(storedOrder);
+            return ResponseEntity.ok(storedOrder);
         }
-        order.setUser(user);
-        orderRepository.save(order);
-        sessionStatus.setComplete();
-        return "redirect:/";
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable("orderId") Long orderId) {
+        try {
+            orderRepository.deleteById(orderId);
+            return ResponseEntity.noContent().build();
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private static <T> void patchIfNotNull(Supplier<T> patchValueSupplier, Consumer<T> patchValueConsumer) {
+        T value = patchValueSupplier.get();
+        if (Objects.nonNull(value)) {
+            patchValueConsumer.accept(value);
+        }
     }
 }
