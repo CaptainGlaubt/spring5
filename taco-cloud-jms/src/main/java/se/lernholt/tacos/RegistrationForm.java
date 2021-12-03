@@ -1,7 +1,5 @@
 package se.lernholt.tacos;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import lombok.Data;
 
 @Data
@@ -15,9 +13,4 @@ public class RegistrationForm {
     private String state;
     private String zip;
     private String phone;
-
-    public User toUser(PasswordEncoder passwordEncoder) {
-        String encodedPassword = passwordEncoder.encode(password);
-        return new User(username, encodedPassword, fullname, street, city, state, zip, phone);
-    }
 }
