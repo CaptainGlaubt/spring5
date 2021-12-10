@@ -1,4 +1,4 @@
-package com.lernholt.reactor;
+package com.lernholt;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
