@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
+
     private final UserRepository userRepository;
 
     @Bean
@@ -25,7 +25,7 @@ public class SecurityConfig {
         return new ReactiveUserDetailsService() {
             @Override
             public Mono<UserDetails> findByUsername(String username) {
-                return userRepository.findById(username).map(user -> {
+                return userRepository.findByUsername(username).map(user -> {
                     return user.toUserDetails();
                 });
             }

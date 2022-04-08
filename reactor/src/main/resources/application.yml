@@ -1,0 +1,1 @@
+spring:  data:    cassandra:      username: reactorusr      password: reactorpwd      keyspace-name: reactorproj      schema-action: recreate-drop-unused      contact-points:      - localhost      port: 9092    mongodb:      host: localhost      port: 27018      username: reactorusr      password: reactorpwd      database: reactorproj

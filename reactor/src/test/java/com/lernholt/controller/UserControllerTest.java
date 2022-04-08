@@ -7,17 +7,16 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.lernholt.domain.user.AddressInfo;
-import com.lernholt.domain.user.ContactInfo;
-import com.lernholt.domain.user.PaymentInfo;
-import com.lernholt.domain.user.RegistrationInfo;
+import com.lernholt.domain.user.AddressInfoUDT;
+import com.lernholt.domain.user.ContactInfoUDT;
+import com.lernholt.domain.user.PaymentInfoUDT;
+import com.lernholt.domain.user.RegistrationInfoUDT;
 import com.lernholt.domain.user.User;
 import com.lernholt.repository.UserRepository;
 
@@ -91,34 +90,24 @@ public class UserControllerTest {
 
     private User generateTestUser(int counter) {
         return User.builder()
-                .id(generateUUID())
                 .firstName(String.format("user-%s", counter))
                 .middleName("middlename")
                 .lastName("lastname")
-                .addressInfo(AddressInfo.builder()
-                        .id(generateUUID())
+                .addressInfo(AddressInfoUDT.builder()
                         .apartmentNumber("1")
                         .postCode("20586")
                         .state("Christmas Land")
                         .street("Santa street 6")
                         .build())
-                .contactInfo(ContactInfo.builder()
-                        .id(generateUUID())
+                .contactInfo(ContactInfoUDT.builder()
                         .privateEmail("email@priv.com")
                         .privatePhoneNumber("555-55555")
                         .workEmail("email@work.com")
                         .workPhoneNumber("666-66666")
                         .build())
-                .paymentInfo(PaymentInfo.builder().id(generateUUID()).creditCardNumber("8468551325").ccv("785").build())
-                .registrationInfo(RegistrationInfo.builder()
-                        .id(generateUUID())
-                        .isActive(true)
-                        .registeredAt(Date.from(Instant.now()))
-                        .build())
+                .paymentInfo(PaymentInfoUDT.builder().creditCardNumber("8468551325").ccv("785").build())
+                .registrationInfo(
+                        RegistrationInfoUDT.builder().isActive(true).registeredAt(Date.from(Instant.now())).build())
                 .build();
-    }
-
-    private String generateUUID() {
-        return UUID.randomUUID().toString();
     }
 }

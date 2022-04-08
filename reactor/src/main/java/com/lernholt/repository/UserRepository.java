@@ -1,9 +1,15 @@
 package com.lernholt.repository;
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import java.util.UUID;
+
+import org.springframework.data.cassandra.repository.AllowFiltering;
+import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 
 import com.lernholt.domain.user.User;
 
-public interface UserRepository extends ReactiveCrudRepository<User, String> {
+import reactor.core.publisher.Mono;
 
+public interface UserRepository extends ReactiveCassandraRepository<User, UUID> {
+    @AllowFiltering
+    Mono<User> findByUsername(String username);
 }

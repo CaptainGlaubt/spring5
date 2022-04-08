@@ -1,5 +1,7 @@
 package com.lernholt.controller;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Mono<User> findUserById(@PathVariable("id") String id) {
+    public Mono<User> findUserById(@PathVariable("id") UUID id) {
         return userRepository.findById(id);
     }
 }
