@@ -9,8 +9,23 @@ import org.springframework.web.client.RestTemplate;
 public class BeanConfig {
 
     @Bean
-    @LoadBalanced
+    @LoadBalanced //Qualifier, needs to be annoteded on injections.
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+    
+//    public Ingredient getIngredientById(String ingredientId) {
+//        return rest.getForObject(
+//        "http://ingredient-service/ingredients/{id}",
+//        Ingredient.class, ingredientId);
+//       }
+    
+//    public Mono<Ingredient> getIngredientById(String ingredientId) {
+//        return wcBuilder.build()
+//        .get()
+//        .uri("http://ingredient-service/ingredients/{id}", ingredientId)
+//        .retrieve().bodyToMono(Ingredient.class);
+//       }
+    
+    
 }

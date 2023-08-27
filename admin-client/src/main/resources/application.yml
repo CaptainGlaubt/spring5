@@ -7,8 +7,8 @@ spring:
       url: http://localhost:9090
       instance: 
         metadata:
-          user.name: ${spring.security.user.name}
-          user.password: ${spring.security.user.password}
+          '[user.name]': ${spring.security.user.name}
+          '[user.password]': ${spring.security.user.password}
 eureka:
   instance:
    metadata-map:
